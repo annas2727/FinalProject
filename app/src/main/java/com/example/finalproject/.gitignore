@@ -1,0 +1,8 @@
+x.isl
+.cxx
+.gradle
+.idea
+build
+.DS_store
+captures
+local_properties

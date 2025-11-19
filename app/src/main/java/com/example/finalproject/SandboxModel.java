@@ -5,57 +5,37 @@ import gl.modeltypes.ShadedColoredModel;
 
 public class SandboxModel extends ShadedColoredModel {
 
-    void PlotWing(ObjectMaker om){
-        om.translate(0, -1.45f, 0);
-        om.rotateZ(15);
-        om.color(1f,1f, 1f);
-        om.trapezoid(1.3f, 2.8f, 0.2f, 0.0f, 0.0f);
-    }
+    ObjectMaker om = new ObjectMaker();
+    int tunnelSidesCount = 8;
+    int tunnelSegmentsCount = 10;
 
-    public SandboxModel(){
-
-        ObjectMaker om=new ObjectMaker();
-
-        //You can use this space as your sandbox to make your own model.
-        //In general you have to repeat the following 3 steps:
-        // 1. go to a new location (using translate, rotate, scale, identity),
-        // 2. pick a color
-        // 3. add a primitive shape block to your model (box, pyramid, trapezoid, cylinder, sphere, etc)
-
-        //The following is just an example:
-
-
-        //long body
+    void PlotTunnelSegment(float z_offset){ //creates tunnel segment
         om.pushMatrix();
-        om.color(1f,1f, 1f);
-        om.cylinder(0.75f,3,0.75f,8);
-        om.popMatrix();
+        om.translate(0, 0, z_offset);
 
-        //shuttle point
+        for (int i = 0; i < tunnelSidesCount; i++) {
 
-        int wings = 3;
-        for (int j=0;j<wings;j++){
             om.pushMatrix();
-            om.rotateY(j * 90);
-            PlotWing(om);
+            om.rotateZ(i * (360f /tunnelSidesCount));
+
+            om.color(1f,1f, 1f);
+            om.box(0.75f,0.1f,3);
+
             om.popMatrix();
         }
+        om.popMatrix();
+    }
 
-        //Helpful tips:
-        //1.Use the accelerometer to see your model from various angles as you edit it.
+    void PlotTunnels() { //plots tunnel segments
+        for (int i = 0; i < tunnelSegmentsCount; i++) {
+            float z = -i * 3f;
+            PlotTunnelSegment(z);
+        }
+    }
+    public SandboxModel(){
 
-        //2.If you want to see where is your current coordinate system use the following line:
-        //axis(om);
-
-        //3.If you want to see a 5x5x5 space box use the following line:
-        //area(om);
-
-        //4.When you are done please delete the axis or area box.
-
-
-        //At the end flush all the vertices (XYZ, triangles, etc) as one solid object.
+        PlotTunnels();
         om.flush(this);
-
     }
 
 

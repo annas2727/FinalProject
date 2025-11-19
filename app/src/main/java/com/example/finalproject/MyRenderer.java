@@ -8,8 +8,7 @@ import gl.renderers.GyroscopicRenderer;
 
 public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListener {
 
-
-    SandboxModel my_sandboxModel;
+    SandboxModel tunnel;
 
     public MyRenderer(Activity activity){
         super(activity);
@@ -21,9 +20,9 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
 
         //In this app we only use 1 model, the SandboxModel.
         //Go to SandboxModel.java to edit its geometry.
-        my_sandboxModel =new SandboxModel();
-        my_sandboxModel.localTransform.translate(0,0,-5);
-        my_sandboxModel.localTransform.updateShader();
+        tunnel =new SandboxModel();
+        tunnel.localTransform.translate(0,0,-5);
+        tunnel.localTransform.updateShader();
 
         background(1f,1f,1f);//white background
         setLightDir(0,-1,-1);
@@ -55,7 +54,7 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT| GLES30.GL_DEPTH_BUFFER_BIT);
 
         //And then we draw the model
-        my_sandboxModel.draw();
+        tunnel.draw();
 
     }
 
