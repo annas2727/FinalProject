@@ -1,19 +1,15 @@
 package com.example.finalproject;
 
 import android.app.Activity;
-import android.content.Context;
 import android.opengl.GLES30;
-
-import gl.Texture;
-import gl.renderers.GLRenderer;
+import android.view.MotionEvent;
+import android.view.View;
 import gl.renderers.GyroscopicRenderer;
-import gl.renderers.ThirdEyeRenderer;
 
-public class MyRenderer extends GyroscopicRenderer {
+public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListener {
 
-    Triangle my_triangle;
-    Cube my_cube;
-    Texture wooden_texture;
+
+    SandboxModel my_sandboxModel;
 
     public MyRenderer(Activity activity){
         super(activity);
@@ -23,19 +19,17 @@ public class MyRenderer extends GyroscopicRenderer {
     @Override
     public void setup() {
 
-        wooden_texture=new Texture(getContext(),"neonTexture.png");
+        //In this app we only use 1 model, the SandboxModel.
+        //Go to SandboxModel.java to edit its geometry.
+        my_sandboxModel =new SandboxModel();
+        my_sandboxModel.localTransform.translate(0,0,-5);
+        my_sandboxModel.localTransform.updateShader();
 
-        my_triangle=new Triangle();
-        my_triangle.setTexture(wooden_texture);
-        my_triangle.localTransform.translate(0,0,-5);
-
-
-        my_cube=new Cube();
-        my_cube.setTexture(wooden_texture);
-        my_cube.localTransform.translate(0,0,-5);
-
-        //background(153/255f,	204/255f,	255/255f);
+        background(1f,1f,1f);//white background
         setLightDir(0,-1,-1);
+
+        setRotationCenter(0,0,-5);
+        setFOV(80);
 
     }
 
@@ -48,21 +42,25 @@ public class MyRenderer extends GyroscopicRenderer {
         float perSec=(float)(elapsedDisplayTime-lastTime);
         lastTime=elapsedDisplayTime;
 
-
-        my_cube.localTransform.rotateX(20*perSec);
-        my_cube.localTransform.rotateZ(20*perSec);
-        my_cube.localTransform.updateShader();
+        //modify animation variables here
 
     }
 
     @Override
     public void draw() {
 
+        //On every frame this method will be called to draw the scene from the current perspective
+
+        //First we clear the previous frame
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT| GLES30.GL_DEPTH_BUFFER_BIT);
 
+        //And then we draw the model
+        my_sandboxModel.draw();
 
-        my_cube.draw();
+    }
 
-
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return true;
     }
 }
