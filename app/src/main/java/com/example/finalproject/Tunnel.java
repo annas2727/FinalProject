@@ -1,25 +1,31 @@
 package com.example.finalproject;
 
 import gl.ObjectMaker;
-import gl.modeltypes.ShadedColoredModel;
+import gl.modeltypes.ShadedTexturedModel;
 
-public class Tunnel extends ShadedColoredModel {
+public class Tunnel extends ShadedTexturedModel  {
 
     ObjectMaker om = new ObjectMaker();
     int tunnelSidesCount = 8;
     int tunnelSegmentsCount = 10;
 
     void PlotTunnelSegment(float z_offset){ //creates tunnel segment
+
+        float radius = 1.2f;
+
         om.pushMatrix();
         om.translate(0, 0, z_offset);
 
         for (int i = 0; i < tunnelSidesCount; i++) {
+            float angle = i * (360f / tunnelSidesCount);
 
             om.pushMatrix();
-            om.rotateZ(i * (360f /tunnelSidesCount));
-
-            om.color(1f,1f, 1f);
-            om.box(0.75f,0.1f,3);
+            om.rotateZ(angle);
+            om.translate(radius,0,0);
+            om.rotateZ(90);
+            om.rotateX(90);
+            om.color(1,1,1);
+            om.rectangle(1.1f, 3f);
 
             om.popMatrix();
         }
