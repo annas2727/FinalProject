@@ -11,8 +11,6 @@ import android.view.SurfaceView;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
-
-
     MyRenderer my_renderer;
 
     @Override

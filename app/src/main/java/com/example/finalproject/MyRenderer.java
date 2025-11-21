@@ -4,30 +4,40 @@ import android.app.Activity;
 import android.opengl.GLES30;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import gl.renderers.GyroscopicRenderer;
 
 public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListener {
 
-    Tunnel tunnel;
+    List<TunnelSegment> segments = new ArrayList<>();
+    float tunnelSpeed = 2f;
+    float segmentLength = 3f;
+    float segmentCount = 10;
+    Activity activity;
 
-    public MyRenderer(Activity activity){
-        super(activity);
+    public MyRenderer(Activity _activity){
+        super(_activity);
+        this.activity=_activity;
     }
-
 
     @Override
     public void setup() {
 
-        //In this app we only use 1 model, the SandboxModel.
-        //Go to SandboxModel.java to edit its geometry.
-        tunnel =new Tunnel();
-        tunnel.localTransform.translate(0,0,-5);
-        tunnel.localTransform.updateShader();
+        for (int i = 0; i < segmentCount; i++) {
+            TunnelSegment segment = new TunnelSegment(activity);
+            segment.z_position = -i * segmentLength;
+            segment.localTransform.translate(0, 0, -5);
+            segment.localTransform.updateShader();
+            segments.add(segment);
+        }
 
         background(1f,1f,1f);//white background
         setLightDir(0,-1,-1);
 
-        setRotationCenter(0,0,-5);
+        setRotationCenter(0,0,0);
         setFOV(80);
 
     }
@@ -37,12 +47,20 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
 
     @Override
     public void simulate(double elapsedDisplayTime) {
-
+        //move tunnel
         float perSec=(float)(elapsedDisplayTime-lastTime);
         lastTime=elapsedDisplayTime;
 
-        //modify animation variables here
+        for (TunnelSegment s : segments) {
+            s.z_position += tunnelSpeed * perSec;
 
+            if (s.z_position > 2f) {
+                s.z_position -= segmentCount * segmentLength;
+            }
+            s.localTransform.identity();
+            s.localTransform.translate(0, 0, s.z_position);
+            s.localTransform.updateShader();
+        }
     }
 
     @Override
@@ -54,7 +72,10 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT| GLES30.GL_DEPTH_BUFFER_BIT);
 
         //And then we draw the model
-        tunnel.draw();
+        for (TunnelSegment s : segments) {
+            s.bindTexture();
+            s.draw();
+        }
 
     }
 

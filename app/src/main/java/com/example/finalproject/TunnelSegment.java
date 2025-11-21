@@ -2,46 +2,46 @@ package com.example.finalproject;
 
 import gl.ObjectMaker;
 import gl.modeltypes.ShadedTexturedModel;
+import gl.Texture;
+import android.content.Context;
 
-public class Tunnel extends ShadedTexturedModel  {
 
-    ObjectMaker om = new ObjectMaker();
-    int tunnelSidesCount = 8;
-    int tunnelSegmentsCount = 10;
+public class TunnelSegment extends ShadedTexturedModel {
 
-    void PlotTunnelSegment(float z_offset){ //creates tunnel segment
+    public float z_position;
+    private Context context;
+    private Texture texture;
 
+    public TunnelSegment(Context _context) { //creates tunnel segment
+        this.context = _context;
+
+        texture = new Texture(context, "galaxy_background.jpg");
+
+        ObjectMaker om = new ObjectMaker();
         float radius = 1.2f;
+        int tunnelSidesCount = 8;
 
         om.pushMatrix();
-        om.translate(0, 0, z_offset);
 
         for (int i = 0; i < tunnelSidesCount; i++) {
             float angle = i * (360f / tunnelSidesCount);
 
             om.pushMatrix();
             om.rotateZ(angle);
-            om.translate(radius,0,0);
+            om.translate(radius, 0, 0);
             om.rotateZ(90);
             om.rotateX(90);
-            om.color(1,1,1);
+            om.color(1, 1, 1);
             om.rectangle(1.1f, 3f);
 
             om.popMatrix();
         }
         om.popMatrix();
-    }
-
-    void PlotTunnels() { //plots tunnel segments
-        for (int i = 0; i < tunnelSegmentsCount; i++) {
-            float z = -i * 3f;
-            PlotTunnelSegment(z);
-        }
-    }
-    public Tunnel(){
-
-        PlotTunnels();
         om.flush(this);
+    }
+
+    public void bindTexture() { //helper to be used in draw
+        texture.setActive(0);
     }
 
 
