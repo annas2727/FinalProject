@@ -8,6 +8,9 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import gl.Texture;
+import gl.formats.OBJFile;
+import gl.modeltypes.ShadedTexturedModel;
 import gl.renderers.GyroscopicRenderer;
 
 public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListener {
@@ -23,8 +26,16 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
         this.activity=_activity;
     }
 
+    ShadedTexturedModel asteroid;
+
     @Override
     public void setup() {
+
+        OBJFile obj=new OBJFile(this,"Asteroid_1a.obj");
+        asteroid=obj.getModel();
+        asteroid.setTexture(new Texture(this.activity,"galaxy_background.jpg"));
+        asteroid.localTransform.translate(0,0,-5);
+        asteroid.localTransform.updateShader();
 
         for (int i = 0; i < segmentCount; i++) {
             TunnelSegment segment = new TunnelSegment(activity);
@@ -61,6 +72,7 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
             s.localTransform.translate(0, 0, s.z_position);
             s.localTransform.updateShader();
         }
+
     }
 
     @Override
@@ -76,6 +88,8 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
             s.bindTexture();
             s.draw();
         }
+
+        asteroid.draw();
 
     }
 
