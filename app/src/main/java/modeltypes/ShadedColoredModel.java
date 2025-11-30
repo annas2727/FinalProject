@@ -4,7 +4,7 @@ import android.opengl.GLES30;
 
 import gl.Mesh;
 import gl.Shader;
-import gl.shaders.ShadedColorShader;
+import gl.renderers.shaders.ShadedColorShader;
 
 
 public class ShadedColoredModel extends Mesh {

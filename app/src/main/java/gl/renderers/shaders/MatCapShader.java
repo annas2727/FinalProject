@@ -1,4 +1,4 @@
-package gl.shaders;
+package gl.renderers.shaders;
 
 
 import gl.Shader;

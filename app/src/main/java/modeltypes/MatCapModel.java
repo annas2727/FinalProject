@@ -5,7 +5,7 @@ import android.opengl.GLES30;
 import gl.Mesh;
 import gl.Shader;
 import gl.Texture;
-import gl.shaders.MatCapShader;
+import gl.renderers.shaders.MatCapShader;
 
 public class MatCapModel extends Mesh {
 
