@@ -9,7 +9,7 @@ import gl.renderers.GyroscopicRenderer;
 public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListener {
 
 
-    SandboxModel my_sandboxModel;
+    SandboxModelCopy my_sandboxModel;
 
     public MyRenderer(Activity activity){
         super(activity);
@@ -21,7 +21,7 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
 
         //In this app we only use 1 model, the SandboxModel.
         //Go to SandboxModel.java to edit its geometry.
-        my_sandboxModel =new SandboxModel();
+        my_sandboxModel =new SandboxModelCopy();
         my_sandboxModel.localTransform.translate(0,0,-5);
         my_sandboxModel.localTransform.updateShader();
 
@@ -41,6 +41,9 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
 
         float perSec=(float)(elapsedDisplayTime-lastTime);
         lastTime=elapsedDisplayTime;
+
+        my_sandboxModel.simulate(perSec);
+
 
         //modify animation variables here
 
