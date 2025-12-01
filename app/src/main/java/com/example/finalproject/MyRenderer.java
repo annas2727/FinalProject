@@ -31,6 +31,8 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
 
     Asteroid asteroid;
 
+    boolean finalCollision = false;
+
     public MyRenderer(Activity _activity, TextView scoreText){
         super(_activity);
         this.activity=_activity;
@@ -102,8 +104,9 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
                 //Log.d("COLLISION", "Asteroid: " + a.positionX + ", " + a.positionY + ", " + a.positionZ);
                 //Log.d("COLLISION", "Character: " + character.positionX + ", " + character.positionY + ", " + character.positionZ);
 
-                if (dx*dx + dy*dy + dz*dz < minDist*minDist) {
+                if (dx*dx + dy*dy + dz*dz < minDist*minDist && !finalCollision) {
                     onCollision(a);
+                    finalCollision = true;
                     Log.d("COLLISION", "Asteroid: " + a.positionX + ", " + a.positionY + ", " + a.positionZ);
                     Log.d("COLLISION", "Character: " + character.positionX + ", " + character.positionY + ", " + character.positionZ);
 

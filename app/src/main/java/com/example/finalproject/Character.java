@@ -33,7 +33,13 @@ public class Character extends ShadedColoredModel {
         om.pushMatrix();
         om.color(0f,0.5f, 1f);
         om.translate(0, 0, 0);
-        om.sphere(1,1,1);
+        om.sphere(0.65f,0.65f,0.65f);
+        om.popMatrix();
+
+        om.pushMatrix();
+        om.color(0.5f,0.5f, 0.5f);
+        om.translate(0, 0, 0);
+        om.sphere(1f,0.3f,1f);
         om.popMatrix();
 
         om.flush(this);
