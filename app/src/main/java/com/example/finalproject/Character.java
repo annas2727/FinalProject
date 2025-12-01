@@ -24,7 +24,7 @@ public class Character extends ShadedColoredModel {
     public float angleX=0;
     public float angleZ=0;
 
-    public float collisionRadius = 0.2f;
+    public float collisionRadius = 0.2f; //0.2
 
     public Character(){
 
@@ -32,71 +32,13 @@ public class Character extends ShadedColoredModel {
 
         om.pushMatrix();
         om.color(0f,0.5f, 1f);
-        om.translate(0, -1.8f, 0);
+        om.translate(0, 0, 0);
         om.sphere(1,1,1);
         om.popMatrix();
 
         om.flush(this);
 
     }
-
-
-    private void area(ObjectMaker om){
-        float size=5;
-        float width=0.1f;
-        om.pushMatrix();
-        om.color(0.5f,0.5f,0.5f);
-
-        om.identity();
-        om.translate(0,size/2,-size/2);
-        om.cylinderX(size,width,width,8);
-        om.translate(0,-size,0);
-        om.cylinderX(size,width,width,8);
-        om.translate(0,0,size);
-        om.cylinderX(size,width,width,8);
-        om.translate(0,size,0);
-        om.cylinderX(size,width,width,8);
-
-        om.identity();
-        om.rotateY(90);
-        om.translate(0,size/2,-size/2);
-        om.cylinderX(size,width,width,8);
-        om.translate(0,-size,0);
-        om.cylinderX(size,width,width,8);
-        om.translate(0,0,size);
-        om.cylinderX(size,width,width,8);
-        om.translate(0,size,0);
-        om.cylinderX(size,width,width,8);
-
-        om.identity();
-        om.rotateZ(90);
-        om.translate(0,size/2,-size/2);
-        om.cylinderX(size,width,width,8);
-        om.translate(0,-size,0);
-        om.cylinderX(size,width,width,8);
-        om.translate(0,0,size);
-        om.cylinderX(size,width,width,8);
-        om.translate(0,size,0);
-        om.cylinderX(size,width,width,8);
-
-        om.popMatrix();
-    }
-
-    private void axis(ObjectMaker om){
-        float width=0.1f;
-        float length=2f;
-        om.pushMatrix();
-        om.color(0,1,0);
-        om.cylinderY(width,length,width,8);
-        om.rotateX(90);
-        om.color(0,0,1);
-        om.cylinderY(width,length,width,8);
-        om.rotateZ(90);
-        om.color(1,0,0);
-        om.cylinderY(width,length,width,8);
-        om.popMatrix();
-    }
-
     public void simulate(float perSec){
 
 //        angleX+=20*perSec;
@@ -115,16 +57,13 @@ public class Character extends ShadedColoredModel {
         positionY+=speedY*perSec;
         positionZ+=speedZ*perSec;
 
-        if (positionY <= 0f && speedY < 0f) {
-            positionY = 0f;
+        if (positionY <= -1.0f && speedY < 0f) {
+            positionY = -1.0f;
             speedY = 0f;
             accelarationY = 0f;
         }
 
-        if(positionZ>-2){
-            positionZ=-2-segments*4;
-            shown=true;
-        }
+        positionZ = -2f;
 
         localTransform.reset();
         localTransform.translate(positionX,positionY,positionZ);
@@ -133,5 +72,5 @@ public class Character extends ShadedColoredModel {
         localTransform.scale(0.5f,0.5f,0.5f);
         localTransform.updateShader();
     }
-
 }
+

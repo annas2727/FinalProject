@@ -17,8 +17,9 @@ public class Asteroid extends ShadedTexturedModel {
     private float spinX, spinY, spinZ;
     private float angleX, angleY, angleZ;
     public float positionX, positionY, positionZ;
+    float asteroidRadius = 0.3f;
 
-    public float collisionRadius = 0.15f;
+    public float collisionRadius = 0.15f; //0.15
 
     public Asteroid(Context context, float baseX, float baseY, float baseZ) {
         super();
@@ -28,7 +29,7 @@ public class Asteroid extends ShadedTexturedModel {
         this.baseZ = baseZ;
 
         ObjectMaker om = new ObjectMaker();
-        om.sphere(0.3f, 0.3f, 0.3f, 10);
+        om.sphere(asteroidRadius, asteroidRadius, asteroidRadius, 10);
         om.flush(this);
         this.texture = new Texture(context, "asteroid_texture.png");
 
@@ -45,17 +46,17 @@ public class Asteroid extends ShadedTexturedModel {
         angleX += spinX * dt;
         angleY += spinY * dt;
         angleZ += spinZ * dt;
+        float cos = (float) Math.cos(tunnelRotation);
+        float sin = (float) Math.sin(tunnelRotation);
 
-        float rotatedX = (float)( baseX * Math.cos(tunnelRotation) - baseY * Math.sin(tunnelRotation) );
-        float rotatedY = (float)( baseX * Math.sin(tunnelRotation) + baseY * Math.cos(tunnelRotation) );
-
+        float rotatedX = baseX * cos - baseY * sin;
+        float rotatedY = baseX * sin + baseY * cos;
         positionX = rotatedX;
         positionY = rotatedY;
         positionZ = segmentZ + baseZ;
 
         localTransform.identity();
-        localTransform.rotateZ(tunnelRotation); //rotate asteroids with tunnel
-        localTransform.translate(baseX, baseY, segmentZ + baseZ);
+        localTransform.translate(positionX, positionY, positionZ);
         localTransform.rotate(angleX, 1, 0, 0);
         localTransform.rotate(angleY, 0, 1, 0);
         localTransform.rotate(angleZ, 0, 0, 1);

@@ -1,5 +1,6 @@
 package com.example.finalproject;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,9 +9,11 @@ import android.media.MediaPlayer;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,6 +38,29 @@ public class MainActivity extends AppCompatActivity {
         surfaceView.setRenderer(my_renderer);
 
         soundEffect = MediaPlayer.create(this, R.raw.sound);
+    }
+    public void showGameOver() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.SpacePopupTheme);
+        LayoutInflater inflater = getLayoutInflater();
+        View popupView = inflater.inflate(R.layout.game_over_popup, null);
+        builder.setView(popupView);
+        builder.setCancelable(false);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        Button restartBtn = popupView.findViewById(R.id.restartButton);
+
+        restartBtn.setOnClickListener(v -> {
+            dialog.dismiss();
+            restartGame();
+        });
+    }
+
+    public void restartGame() {
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
 

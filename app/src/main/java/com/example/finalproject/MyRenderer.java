@@ -2,6 +2,7 @@ package com.example.finalproject;
 
 import android.app.Activity;
 import android.opengl.GLES30;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.hardware.Sensor;
@@ -28,6 +29,8 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
     Activity activity;
     Character character;
 
+    Asteroid asteroid;
+
     public MyRenderer(Activity _activity, TextView scoreText){
         super(_activity);
         this.activity=_activity;
@@ -40,7 +43,7 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
         character = new Character();
         float startingPos = -3f;
         character.positionZ = startingPos;
-        character.positionY = 0;
+        character.positionY = -1.0f;
         character.positionX = 0;
         character.localTransform.translate(0, 0, startingPos);
         character.localTransform.updateShader();
@@ -90,16 +93,21 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
 
             for (Asteroid a : s.asteroids) {
                 a.update(perSec, s.z_position, tunnelRotation);
+
                 float dx = a.positionX - character.positionX;
                 float dy = a.positionY - character.positionY;
                 float dz = a.positionZ - character.positionZ;
 
-                float distSq = dx*dx + dy*dy + dz*dz;
                 float minDist = a.collisionRadius + character.collisionRadius;
+                //Log.d("COLLISION", "Asteroid: " + a.positionX + ", " + a.positionY + ", " + a.positionZ);
+                //Log.d("COLLISION", "Character: " + character.positionX + ", " + character.positionY + ", " + character.positionZ);
 
-
-                if (distSq < minDist * minDist) {
+                if (dx*dx + dy*dy + dz*dz < minDist*minDist) {
                     onCollision(a);
+                    Log.d("COLLISION", "Asteroid: " + a.positionX + ", " + a.positionY + ", " + a.positionZ);
+                    Log.d("COLLISION", "Character: " + character.positionX + ", " + character.positionY + ", " + character.positionZ);
+
+                    //Log.d("COLLISION", "Collision detected!");
                 }
             }
         }
@@ -135,7 +143,7 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
 
             float roll = orientations[2];   // radians, tilt left/right
 
-            tunnelRotation = roll * 40f;
+            tunnelRotation = roll;
 
             score += 1;
             updateScoreDisplay();
@@ -148,7 +156,10 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
     }
 
     public void onCollision(Asteroid asteroid) {
-        System.out.println("HIT!");
+        this.asteroid = asteroid;
+        Log.d("COLLISION", "Collision detected!");
+        activity.runOnUiThread(() -> ((MainActivity)activity).showGameOver());
+        return;
     }
 
     public void updateScoreDisplay() {
