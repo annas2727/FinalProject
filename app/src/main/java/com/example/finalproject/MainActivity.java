@@ -4,14 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.media.MediaPlayer;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
     MyRenderer my_renderer;
+
+    private MediaPlayer soundEffect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +34,23 @@ public class MainActivity extends AppCompatActivity {
 
         surfaceView.setRenderer(my_renderer);
 
-
+        soundEffect = MediaPlayer.create(this, R.raw.sound);
     }
 
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            // 👉 Screen was tapped
+            Globals.screenTapped = true;
+            if (soundEffect != null) {
+                soundEffect.start();
+            }
+        }
+
+        // Let the normal event handling continue
+        return super.onTouchEvent(event);
+    }
 
 
     @Override
@@ -50,7 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy(){
+
         super.onDestroy();
+        if (soundEffect != null) {
+            soundEffect.release();
+            soundEffect = null;
+        }
     }
 
 

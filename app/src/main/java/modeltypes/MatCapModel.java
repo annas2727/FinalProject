@@ -1,4 +1,4 @@
-package gl.modeltypes;
+package modeltypes;
 
 import android.opengl.GLES30;
 
