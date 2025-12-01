@@ -101,8 +101,6 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
                 float dz = a.positionZ - character.positionZ;
 
                 float minDist = a.collisionRadius + character.collisionRadius;
-                //Log.d("COLLISION", "Asteroid: " + a.positionX + ", " + a.positionY + ", " + a.positionZ);
-                //Log.d("COLLISION", "Character: " + character.positionX + ", " + character.positionY + ", " + character.positionZ);
 
                 if (dx*dx + dy*dy + dz*dz < minDist*minDist && !finalCollision) {
                     onCollision(a);
@@ -110,7 +108,6 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
                     Log.d("COLLISION", "Asteroid: " + a.positionX + ", " + a.positionY + ", " + a.positionZ);
                     Log.d("COLLISION", "Character: " + character.positionX + ", " + character.positionY + ", " + character.positionZ);
 
-                    //Log.d("COLLISION", "Collision detected!");
                 }
             }
         }
@@ -144,9 +141,7 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
             SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values);
             SensorManager.getOrientation(rotationMatrix, orientations);
 
-            float roll = orientations[2];   // radians, tilt left/right
-
-            tunnelRotation = roll;
+            tunnelRotation = orientations[2];  // radians, tilt left/right
 
             score += 1;
             updateScoreDisplay();

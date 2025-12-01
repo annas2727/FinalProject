@@ -48,7 +48,7 @@ public class TunnelSegment extends ShadedTexturedModel {
         createAsteroids();
     }
     private void createAsteroids() {
-        int count = 1; //int count = 3 + random.nextInt(3); // 3–5 asteroids per segment
+        int count = 3 + random.nextInt(3); // 3–5 asteroids per segment
 
         for (int i = 0; i < count; i++) {
             // random angle around tunnel center
