@@ -79,23 +79,23 @@ public class ObjectMaker extends Transform {
         int nrm_start=this.nrm.size();
         float[] a=new float[]{0,0,0,0};
         int c=0;
-            float[] nm=new float[16];
-            for(int i=0;i<16;i++)nm[i]=matrix[i];
-            nm[12]=0;
-            nm[13]=0;
-            nm[14]=0;
-            float[] inv=new float[16];
-            Matrix.invertM(inv,0,nm,0);
-            Matrix.transposeM(nm,0,inv,0);
+        float[] nm=new float[16];
+        for(int i=0;i<16;i++)nm[i]=matrix[i];
+        nm[12]=0;
+        nm[13]=0;
+        nm[14]=0;
+        float[] inv=new float[16];
+        Matrix.invertM(inv,0,nm,0);
+        Matrix.transposeM(nm,0,inv,0);
 
-            for(int i=0;i<v.length/3;i++)
-            {
-                c=i*3;
-                Matrix.multiplyMV(a,0,nm,0,new float[]{v[c],v[c+1],v[c+2],0},0);
-                this.nrm.add(new Float(a[0]));
-                this.nrm.add(new Float(a[1]));
-                this.nrm.add(new Float(a[2]));
-            }
+        for(int i=0;i<v.length/3;i++)
+        {
+            c=i*3;
+            Matrix.multiplyMV(a,0,nm,0,new float[]{v[c],v[c+1],v[c+2],0},0);
+            this.nrm.add(new Float(a[0]));
+            this.nrm.add(new Float(a[1]));
+            this.nrm.add(new Float(a[2]));
+        }
 
     }
 
@@ -252,7 +252,7 @@ public class ObjectMaker extends Transform {
         trapezoid(width,height,depth,width,depth);
     }
 
-        public void trapezoid(float width, float height, float depth, float width2, float depth2){
+    public void trapezoid(float width, float height, float depth, float width2, float depth2){
 
         float x=width;
         float z=height;
@@ -503,7 +503,7 @@ public class ObjectMaker extends Transform {
 
         //if(opt.noTop){}
         //else
-         {
+        {
             this.pushMatrix();
             this.translate(0,0.5f,0);
             this.rotateX(-90);
@@ -695,7 +695,3 @@ public class ObjectMaker extends Transform {
         if(opt.triangles)this.tri=[];
         if(opt.colors)this.clr=[];
         };*/
-
-
-
-

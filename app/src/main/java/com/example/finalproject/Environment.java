@@ -1,7 +1,8 @@
 package com.example.finalproject;
 
-import gl.ObjectMaker;
 import gl.modeltypes.ShadedColoredModel;
+import gl.ObjectMaker;
+
 
 public class Environment extends ShadedColoredModel {
 

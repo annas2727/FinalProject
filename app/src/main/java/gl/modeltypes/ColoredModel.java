@@ -4,7 +4,7 @@ import android.opengl.GLES30;
 
 import gl.Mesh;
 import gl.Shader;
-import gl.renderers.shaders.ColorShader;
+import gl.shaders.ColorShader;
 
 
 public class ColoredModel extends Mesh {
@@ -31,4 +31,3 @@ public class ColoredModel extends Mesh {
 
     }
 }
-

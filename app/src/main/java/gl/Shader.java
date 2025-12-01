@@ -6,7 +6,7 @@ public class Shader {
 
 
     public int shaderProgram=0;
-   // public int sceneMatricesBuffer;
+    // public int sceneMatricesBuffer;
 
 
     public Shader(String vertexShaderCode, String fragmentShaderCode){
@@ -123,7 +123,7 @@ public class Shader {
         GLES30.glAttachShader(mProgram, fragmentShader);
 
         for(int i=0;i<attribLocations.length;i++)
-        GLES30.glBindAttribLocation( mProgram, i, attribLocations[i] );
+            GLES30.glBindAttribLocation( mProgram, i, attribLocations[i] );
 
 
         // creates OpenGL ES program executables

@@ -11,9 +11,11 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     MyRenderer my_renderer;
+    TextView scoreText;
 
     private MediaPlayer soundEffect;
 
@@ -24,14 +26,12 @@ public class MainActivity extends AppCompatActivity {
 
         GLSurfaceView surfaceView=findViewById(R.id.surfaceView);
         surfaceView.setEGLContextClientVersion(3);
-        surfaceView.setZOrderOnTop(true);
         surfaceView.setEGLConfigChooser(8,8,8,8,16,0);
         surfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
 
+        scoreText = findViewById(R.id.scoreText);
 
-        my_renderer=new MyRenderer(this);
-        //my_renderer.showCamera(findViewById(R.id.textureView));
-
+        my_renderer = new MyRenderer(this, scoreText);
         surfaceView.setRenderer(my_renderer);
 
         soundEffect = MediaPlayer.create(this, R.raw.sound);

@@ -4,6 +4,11 @@ import android.app.Activity;
 import android.opengl.GLES30;
 import android.view.MotionEvent;
 import android.view.View;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
+import android.widget.TextView;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,21 +18,32 @@ import gl.renderers.GyroscopicRenderer;
 public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListener {
 
     List<TunnelSegment> segments = new ArrayList<>();
-    float tunnelSpeed = 2f;
+    float tunnelSpeed = 1f;
     float segmentLength = 3f;
-    float segmentCount = 10;
-    Activity activity;
-    SandboxModel my_sandboxModel;
-    SandboxModelCopy my_sandboxModel;
+    float segmentCount = 15;
+    float tunnelRotation = 0f;
+    public int score = 0;
+    TextView scoreText;
 
-    public MyRenderer(Activity _activity){
+    Activity activity;
+    Character character;
+
+    public MyRenderer(Activity _activity, TextView scoreText){
         super(_activity);
         this.activity=_activity;
+        this.scoreText = scoreText;
     }
-
 
     @Override
     public void setup() {
+
+        character = new Character();
+        float startingPos = -3f;
+        character.positionZ = startingPos;
+        character.positionY = 0;
+        character.positionX = 0;
+        character.localTransform.translate(0, 0, startingPos);
+        character.localTransform.updateShader();
 
         for (int i = 0; i < segmentCount; i++) {
             TunnelSegment segment = new TunnelSegment(activity);
@@ -36,20 +52,19 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
             segment.localTransform.updateShader();
             segments.add(segment);
         }
-        //In this app we only use 1 model, the SandboxModel.
-        //Go to SandboxModel.java to edit its geometry.
-        my_sandboxModel =new SandboxModelCopy();
-        my_sandboxModel.localTransform.translate(0,0,-5);
-        my_sandboxModel.localTransform.updateShader();
 
-        background(1f,1f,1f);//white background
+        background(1f,1f,1f);
         setLightDir(0,-1,-1);
 
         setRotationCenter(0,0,-5);
         setFOV(80);
-
     }
 
+    @Override
+    public void setupView() {
+        view.identity();
+        view.translate(0, 0, 0);
+    }
 
     double lastTime=0;
 
@@ -59,36 +74,91 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
         float perSec=(float)(elapsedDisplayTime-lastTime);
         lastTime=elapsedDisplayTime;
 
+        if (tunnelSpeed < 10) tunnelSpeed += 0.001f;
+
         for (TunnelSegment s : segments) {
             s.z_position += tunnelSpeed * perSec;
 
             if (s.z_position > 2f) {
                 s.z_position -= segmentCount * segmentLength;
             }
+
             s.localTransform.identity();
+            s.localTransform.rotateZ(tunnelRotation);
             s.localTransform.translate(0, 0, s.z_position);
             s.localTransform.updateShader();
+
+            for (Asteroid a : s.asteroids) {
+                a.update(perSec, s.z_position, tunnelRotation);
+                float dx = a.positionX - character.positionX;
+                float dy = a.positionY - character.positionY;
+                float dz = a.positionZ - character.positionZ;
+
+                float distSq = dx*dx + dy*dy + dz*dz;
+                float minDist = a.collisionRadius + character.collisionRadius;
+
+
+                if (distSq < minDist * minDist) {
+                    onCollision(a);
+                }
+            }
         }
+        character.simulate(perSec);
     }
 
     @Override
     public void draw() {
+       GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT| GLES30.GL_DEPTH_BUFFER_BIT);
 
-        //On every frame this method will be called to draw the scene from the current perspective
-
-        //First we clear the previous frame
-        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT| GLES30.GL_DEPTH_BUFFER_BIT);
-
-        //And then we draw the model
         for (TunnelSegment s : segments) {
             s.bindTexture();
             s.draw();
+            for (Asteroid a : s.asteroids) {
+                a.bindTexture();
+                a.draw();
+            }
+        }
+        if (character != null && character.shown) {
+            character.draw();
         }
 
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+            float[] rotationMatrix = new float[9];
+            float[] orientations   = new float[3];
+
+            SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values);
+            SensorManager.getOrientation(rotationMatrix, orientations);
+
+            float roll = orientations[2];   // radians, tilt left/right
+
+            tunnelRotation = roll * 40f;
+
+            score += 1;
+            updateScoreDisplay();
+        }
     }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         return true;
     }
+
+    public void onCollision(Asteroid asteroid) {
+        System.out.println("HIT!");
+    }
+
+    public void updateScoreDisplay() {
+        activity.runOnUiThread(() -> {
+            scoreText.setText("Score: " + score);
+        });
+    }
+
+
 }
+
+
+

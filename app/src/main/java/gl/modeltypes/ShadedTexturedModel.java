@@ -5,7 +5,7 @@ import android.opengl.GLES30;
 import gl.Mesh;
 import gl.Shader;
 import gl.Texture;
-import gl.renderers.shaders.ShadedTextureShader;
+import gl.shaders.ShadedTextureShader;
 
 
 public class ShadedTexturedModel extends Mesh {
@@ -76,4 +76,3 @@ public class ShadedTexturedModel extends Mesh {
 
     }
 }
-
