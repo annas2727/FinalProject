@@ -58,7 +58,7 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
             segments.add(segment);
         }
 
-        background(1f,1f,1f);
+        background(0f,0f,0f);
         setLightDir(0,-1,-1);
 
         setRotationCenter(0,0,-5);
