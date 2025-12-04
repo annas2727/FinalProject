@@ -162,7 +162,7 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
     public void onCollision(Asteroid asteroid) {
         this.asteroid = asteroid;
         Log.d("COLLISION", "Collision detected!");
-        activity.runOnUiThread(() -> ((MainActivity)activity).showGameOver());
+        activity.runOnUiThread(() -> ((MainActivity)activity).showGameOver(score));
         return;
     }
 

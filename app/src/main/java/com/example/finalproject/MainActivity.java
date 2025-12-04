@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             music.start();
         }
     }
-    public void showGameOver() {
+    public void showGameOver(int score) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.SpacePopupTheme);
         LayoutInflater inflater = getLayoutInflater();
         View popupView = inflater.inflate(R.layout.game_over_popup, null);
@@ -64,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         Button restartBtn = popupView.findViewById(R.id.restartButton);
+
+        TextView scoreText = popupView.findViewById(R.id.scoreText);
+        scoreText.setText("Score: " + score);
 
         if (destroyedSound != null) {
             destroyedSound.start();
