@@ -22,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
     TextView scoreText;
 
     private MediaPlayer soundEffect;
+    private MediaPlayer destroyedSound;
+    private MediaPlayer music;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +41,14 @@ public class MainActivity extends AppCompatActivity {
         my_renderer = new MyRenderer(this, scoreText);
         surfaceView.setRenderer(my_renderer);
 
-        soundEffect = MediaPlayer.create(this, R.raw.sound);
+        soundEffect = MediaPlayer.create(this, R.raw.jump);
+        destroyedSound = MediaPlayer.create(this, R.raw.destroyed);
+        music = MediaPlayer.create(this, R.raw.space_music);
+        music.setLooping(true);
+
+        if (music != null) {
+            music.start();
+        }
     }
     public void showGameOver() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.SpacePopupTheme);
@@ -54,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         Button restartBtn = popupView.findViewById(R.id.restartButton);
+
+        if (destroyedSound != null) {
+            destroyedSound.start();
+        }
 
         restartBtn.setOnClickListener(v -> {
             dialog.dismiss();
@@ -94,6 +108,9 @@ public class MainActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         my_renderer.resumeCamera();
+        if (music != null) {
+            music.start();
+        }
     }
 
     @Override
@@ -103,6 +120,14 @@ public class MainActivity extends AppCompatActivity {
         if (soundEffect != null) {
             soundEffect.release();
             soundEffect = null;
+        }
+        if (destroyedSound != null) {
+            destroyedSound.release();
+            destroyedSound = null;
+        }
+        if (music != null) {
+            music.release();
+            music = null;
         }
     }
 
