@@ -24,6 +24,7 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
     float segmentCount = 15;
     float tunnelRotation = 0f;
     public int score = 0;
+    int scoreInc = 1;
     TextView scoreText;
 
     Activity activity;
@@ -32,6 +33,7 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
     Asteroid asteroid;
 
     boolean finalCollision = false;
+    int invincible = 50;
 
     public MyRenderer(Activity _activity, TextView scoreText){
         super(_activity);
@@ -79,7 +81,8 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
         float perSec=(float)(elapsedDisplayTime-lastTime);
         lastTime=elapsedDisplayTime;
 
-        if (tunnelSpeed < 10) tunnelSpeed += 0.001f;
+        if (invincible > 0) invincible--;
+        if (tunnelSpeed < 10 && !finalCollision) tunnelSpeed += 0.001f;
 
         for (TunnelSegment s : segments) {
             s.z_position += tunnelSpeed * perSec;
@@ -102,9 +105,12 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
 
                 float minDist = a.collisionRadius + character.collisionRadius;
 
-                if (dx*dx + dy*dy + dz*dz < minDist*minDist && !finalCollision) {
+                if (dx*dx + dy*dy + dz*dz < minDist*minDist && !finalCollision && invincible <= 0) {
                     onCollision(a);
                     finalCollision = true;
+                    tunnelSpeed = 0;
+                    scoreInc = 0;
+
                     Log.d("COLLISION", "Asteroid: " + a.positionX + ", " + a.positionY + ", " + a.positionZ);
                     Log.d("COLLISION", "Character: " + character.positionX + ", " + character.positionY + ", " + character.positionZ);
 
@@ -143,7 +149,7 @@ public class MyRenderer extends GyroscopicRenderer implements View.OnTouchListen
 
             tunnelRotation = orientations[2];  // radians, tilt left/right
 
-            score += 1;
+            score += scoreInc;
             updateScoreDisplay();
         }
     }
